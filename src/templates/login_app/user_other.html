@@ -1,0 +1,40 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% block title_block %} {{ user.user_profile.name }} (@ {{user.username }}) {% endblock %}
+{% block css_block %} {% endblock %}
+{% block body_block %}
+
+<div class="row">
+    <div class="col-sm-4">
+        {% if user_other.user_profile.profile_pic %}
+        <img src="/media/{{user.user_profile.profile_pic}}" style="width: 250px;height: 250px;">
+        {% else %}
+        <img src="/media/default.jpg" style="width: 250px;height: 250px;" class="rounded-circle">
+        {% endif %}
+    </div>
+    <div class="col-sm-8">
+        {% if already_followed %}
+        <h2>{{ user_other.username }} <a type="button" class="btn btn-info btn-sm" href="{% url 'unfollow' user_other.username %}">Unfollow</a></h2>
+        {% else %}
+        <h2>{{ user_other.username }} <a type="button" class="btn btn-info btn-sm" href="{% url 'follow' user_other.username %}">Follow</a></h2>
+        {% endif %}
+        <br>
+        <h4>{{ user_other.post.count }} posts &nbsp; &nbsp; {{ user_other.following.count }} followers &nbsp; &nbsp; {{ user_other.follower.count }} following </h4>
+        <br> 
+        <h3>{{ user_other.user_profile.name}}</h3>
+        <p>{{ user_other.user_profile.description|linebreaks}}</p>
+    </div>
+</div>
+<hr>
+
+
+
+<div class="row mt-4">
+    <div class="col">
+        {% for post in user_other.post_author.all %}
+        <img src="/media/{{ post.image }}" alt="">
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

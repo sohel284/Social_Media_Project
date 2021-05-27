@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    {% if search %}
+    {% for result in results %}
+    <div class="row">
+        <div class="col-sm-4">
+            {% if result.user_profile.profile_pic %}
+            <img src="/media/{{result.user_profile.profile_pic}}" style="width: 250px;height: 250px;">
+            {% else %}
+            <img src="/media/default.jpg" style="width: 250px;height: 250px;" class="rounded-circle">
+            {% endif %}
+        </div>
+        <div class="col-sm-8">
+            <h2><a href="{% url 'user' result.username %}" type="button" class="btn btn-light btn-sm">{{ result.username
+                    }}</a></h2>
+            <br>
+            <h3>{{ user.user_profile.name}}</h3>
+
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="conatiner mx-5" id="app">
+        <div class="row">
+            <div class="col-sm-8">
+                {% for post in posts %}
+                <div class="card">
+                    <div class="card-header">
+                        {{ post.author }}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-title">{{ post.caption }} </p>
+                        <img src="/media/{{ post.image }}" alt="" style="height: 250px; width: 250px;">
+                    </div>
+                    <span style="padding-left: 16px;">
+                        {% if post.pk in already_liked_list %}
+                        <a href="{% url 'unliked' post.pk %}">
+                            <i class="fas fa-heart" style="font-size: 36px; color: red;"></i>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'liked' post.pk %}">
+                            <i id="heart" class="far fa-heart" style="font-size: 36px;"></i>
+                        </a>
+                        {% endif %}
+                        <i @click="liked" class="fa fa-thumbs-up ml-2" style="font-size: 36px;" aria-hidden="true"></i>
+                        
+                    </span>
+                   
+
+                </div>
+                <br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script src="{% static  'js/bootstrap.min.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% if debug %}
+    <script src="{% static 'vue.js' %}"></script>
+    {% else %}
+    <script src="{% static 'vue.js' %}"></script>
+    {% endif %}
+
+    <script type="text/javascript">
+       var app = new Vue({
+           el:"#app",
+           delimiters:[ '[[', ']]'],
+           data:{
+               msg: 'hello',
+           },
+           methods:{
+               liked: function(){
+                   console.log(this.msg);
+               },
+           }
+       })
+    </script>
+
+
+</body>
+
+</html>
